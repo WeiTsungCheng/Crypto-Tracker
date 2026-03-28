@@ -9,15 +9,29 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            Text("Loading....")
+                .navigationTitle("Crypo")
+                .task {
+                    await loadCoins()
+                }
         }
-        .padding()
+    }
+    
+    private func loadCoins() async {
+        do {
+            let coins = try await APIService.fetchCoins()
+            print("fetch coins count: \(coins.count)")
+            
+            for coin in coins.prefix(10) {
+                print("\(coin.name) - \(coin.currentPrice)")
+            }
+        } catch {
+            print("Failed to fetch coins: \(error)")
+        }
     }
 }
+
 
 #Preview {
     ContentView()
