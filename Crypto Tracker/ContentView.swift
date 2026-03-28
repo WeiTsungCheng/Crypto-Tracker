@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @StateObject private var store = Store()
+    
     @State private var coins: [Coin] = []
     @State private var isLoading: Bool = false
     @State private var errorMessage: String?
@@ -17,9 +19,9 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if isLoading {
+                if store.state.isLoading {
                     ProgressView("Loading...")
-                } else if let errorMessage = errorMessage {
+                } else if let errorMessage = store.state.errorMessage {
                     VStack(spacing: 12) {
                         Text("Failed to load data")
                             .font(.headline)
@@ -30,15 +32,13 @@ struct ContentView: View {
                             .multilineTextAlignment(.center)
                         
                         Button("Retry") {
-                            Task {
-                                await loadCoins()
-                            }
+                            store.send(.fetchCoins)
                         }
                     }
                     .padding()
                     
                 } else {
-                    List(coins) { coin in
+                    List(store.state.coins) { coin in
                         VStack(alignment: .leading, spacing: 4) {
                             Text(coin.name)
                                 .font(.headline)
@@ -57,24 +57,10 @@ struct ContentView: View {
             .navigationTitle("Crypto")
             .task {
                 if coins.isEmpty {
-                    await loadCoins()
+                    store.send(.fetchCoins)
                 }
             }
         }
-    }
-    
-    private func loadCoins() async {
-        isLoading = true
-        errorMessage = nil
-        
-        do {
-            let fetchCoins = try await APIService.fetchCoins()
-            coins = fetchCoins
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-        isLoading = false
-      
     }
 }
 
@@ -82,3 +68,4 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+
