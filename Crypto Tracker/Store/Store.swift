@@ -11,9 +11,16 @@ import Combine
 @MainActor
 final class Store: ObservableObject {
     
-    @Published private(set) var state = AppState()
+    @Published private(set) var state = AppState(
+        favoriteCoinIDs: PersistenceService.loadFavorites()
+    )
     
     func send(_ action: AppAction) {
+        
+        if case .fetchCoins = action, state.isLoading {
+            return
+        }
+        
         appReducer(state: &state, action: action)
         
         switch action {
@@ -23,18 +30,18 @@ final class Store: ObservableObject {
             }
         case .fetchSuccess, .fetchFailed:
             break
-        case .toggleFavorite(_):
-            break
+        case .toggleFavorite:
+            PersistenceService.saveFavorites(state.favoriteCoinIDs)
         }
     }
-
+    
     private func fetchCoins() async {
-         do {
-             let fetchedCoins = try await APIService.fetchCoins()
-             send(.fetchSuccess(Array(fetchedCoins.prefix(20))))
-         } catch {
-             send(.fetchFailed(error.localizedDescription))
-         }
-     }
+        do {
+            let fetchedCoins = try await APIService.fetchCoins()
+            send(.fetchSuccess(Array(fetchedCoins.prefix(20))))
+        } catch {
+            send(.fetchFailed(error.localizedDescription))
+        }
+    }
     
 }
