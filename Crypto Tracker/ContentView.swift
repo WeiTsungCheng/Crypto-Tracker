@@ -11,11 +11,6 @@ struct ContentView: View {
     
     @StateObject private var store = Store()
     
-    @State private var coins: [Coin] = []
-    @State private var isLoading: Bool = false
-    @State private var errorMessage: String?
-    
-    
     var body: some View {
         NavigationStack {
             Group {
@@ -39,24 +34,16 @@ struct ContentView: View {
                     
                 } else {
                     List(store.state.coins) { coin in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(coin.name)
-                                .font(.headline)
-                            
-                            Text(coin.symbol.uppercased())
-                            
-                            Text("$\(coin.currentPrice, specifier: "%.2f")")
-                                .font(.body)
+                        NavigationLink(destination: CoinDetailView(coin: coin)) {
+                            CoinRowView(coin: coin)
                         }
-                        .padding(.vertical, 4)
-                        
                     }
                     .listStyle(.plain)
                 }
             }
             .navigationTitle("Crypto")
             .task {
-                if coins.isEmpty {
+                if store.state.coins.isEmpty {
                     store.send(.fetchCoins)
                 }
             }
