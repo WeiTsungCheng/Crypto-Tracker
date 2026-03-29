@@ -15,7 +15,7 @@ enum APIError: Error {
 struct APIService {
     
     static func fetchCoins() async throws -> [Coin] {
-        guard let url = URL(string: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd") else {
+        guard let url = URL(string: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=gbp") else {
             throw APIError.invalidURL
         }
         
