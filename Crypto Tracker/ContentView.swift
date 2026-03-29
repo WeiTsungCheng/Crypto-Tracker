@@ -39,6 +39,9 @@ struct ContentView: View {
                         }
                     }
                     .listStyle(.plain)
+                    .refreshable {
+                        store.send(.fetchCoins)
+                    }
                 }
             }
             .navigationTitle("Crypto")
