@@ -9,4 +9,6 @@ struct AppState {
     var coins: [Coin] = []
     var isLoading: Bool = false
     var errorMessage: String?
+    // favorite
+    var favoriteCoinIDs: Set<String> = []
 }

@@ -9,4 +9,6 @@ enum AppAction {
     case fetchCoins
     case fetchSuccess([Coin])
     case fetchFailed(String)
+    // favortie
+    case toggleFavorite(String)
 }

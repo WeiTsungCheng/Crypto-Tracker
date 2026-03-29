@@ -35,7 +35,12 @@ struct ContentView: View {
                 } else {
                     List(store.state.coins) { coin in
                         NavigationLink(destination: CoinDetailView(coin: coin)) {
-                            CoinRowView(coin: coin)
+                            CoinRowView(
+                                coin: coin,
+                                isFavorite: store.state.favoriteCoinIDs.contains(coin.id), onFavoriteTapped: {
+                                    store.send(.toggleFavorite(coin.id))
+                                }
+                            )
                         }
                     }
                     .listStyle(.plain)
@@ -50,6 +55,7 @@ struct ContentView: View {
                     store.send(.fetchCoins)
                 }
             }
+           
         }
     }
 }

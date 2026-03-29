@@ -23,6 +23,8 @@ final class Store: ObservableObject {
             }
         case .fetchSuccess, .fetchFailed:
             break
+        case .toggleFavorite(_):
+            break
         }
     }
 

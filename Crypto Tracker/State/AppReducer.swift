@@ -16,5 +16,12 @@ func appReducer(state: inout AppState, action: AppAction) {
     case .fetchFailed(let error):
         state.isLoading = false
         state.errorMessage = error
+    // favorite
+    case .toggleFavorite(let id):
+        if state.favoriteCoinIDs.contains(id) {
+            state.favoriteCoinIDs.remove(id)
+        } else {
+            state.favoriteCoinIDs.insert(id)
+        }
     }
 }

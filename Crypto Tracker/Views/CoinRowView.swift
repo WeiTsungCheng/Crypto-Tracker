@@ -8,9 +8,17 @@ import SwiftUI
 
 struct CoinRowView: View {
     let coin: Coin
+    let isFavorite: Bool
+    let onFavoriteTapped: () -> Void
     
     var body: some View {
         HStack {
+            Button(action: onFavoriteTapped) {
+                Image(systemName: isFavorite ? "star.fill" : "star")
+                    .foregroundColor(.yellow)
+            }
+            .buttonStyle(.plain)
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(coin.name)
                     .font(.headline)
@@ -36,16 +44,18 @@ struct CoinRowView: View {
 }
 
 
-
 #Preview {
-    CoinRowView(coin: Coin(
-        id: "bitcoin",
-        name: "Bitcoin",
-        symbol: "btc",
-        currentPrice: 65000,
-        marketCapRank: 1,
-        high24h: 66000,
-        low24h: 64000,
-        priceChangePercentage24h: 1.25
-    ))
+    CoinRowView(coin:
+                    Coin(
+                        id: "bitcoin",
+                        name: "Bitcoin",
+                        symbol: "btc",
+                        currentPrice: 65000,
+                        marketCapRank: 1,
+                        high24h: 66000,
+                        low24h: 64000,
+                        priceChangePercentage24h: 1.25),
+                isFavorite: false,
+                onFavoriteTapped: {}
+    )
 }
