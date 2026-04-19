@@ -27,8 +27,9 @@ struct APIService {
         
         let decoder = JSONDecoder()
         
-        return try decoder.decode([Coin].self, from: data)
+        let coinDTOs = try decoder.decode([CoinDTO].self, from: data)
         
+        return coinDTOs.map { $0.toDomain() }
         
     }
 }

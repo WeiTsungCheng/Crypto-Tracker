@@ -7,7 +7,20 @@
 
 import Foundation
 
-struct Coin: Codable, Identifiable {
+
+struct Coin: Identifiable {
+    let id: String
+    let name: String
+    let symbol: String
+    let currentPrice: Double
+    let marketCapRank: Int?
+    let high24h: Double?
+    let low24h: Double?
+    let priceChangePercentage24h: Double?
+}
+
+// DTO: Data Transfer Object
+struct CoinDTO: Codable {
     let id: String
     let name: String
     let symbol: String
@@ -27,4 +40,19 @@ struct Coin: Codable, Identifiable {
         case low24h = "low_24h"
         case priceChangePercentage24h = "price_change_percentage_24h"
     }
+    
+    func toDomain() -> Coin {
+        Coin(id: id,
+             name: name,
+             symbol: symbol,
+             currentPrice: currentPrice,
+             marketCapRank: marketCapRank,
+             high24h: high24h,
+             low24h: low24h,
+             priceChangePercentage24h:
+                priceChangePercentage24h)
+    }
 }
+
+
+
