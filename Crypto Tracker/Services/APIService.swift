@@ -7,29 +7,69 @@
 
 import Foundation
 
-enum APIError: Error {
+
+enum NetworkError: LocalizedError {
     case invalidURL
     case invalidResponse
+    case badStatusCode(Int)
+    case decodingFailed
+    case unknown(Error)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return "The request URL is invalid."
+        case .invalidResponse:
+            return "The server response is invalid."
+        case .badStatusCode(let code):
+            return "The server returned an error (\(code))."
+        case .decodingFailed:
+            return "Failed to decode the server response."
+        case .unknown(let error):
+            return error.localizedDescription
+        }
+    }
+    
 }
 
-struct APIService {
+protocol APIServiceProtocol {
+    func fetchCoins() async throws -> [Coin]
+}
+
+class APIService: APIServiceProtocol {
     
-    static func fetchCoins() async throws -> [Coin] {
-        guard let url = URL(string: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=gbp") else {
-            throw APIError.invalidURL
+    func fetchCoins() async throws -> [Coin] {
+        
+        let coinURL = URL(string: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=gbp")
+        guard let url = coinURL else {
+            throw NetworkError.invalidURL
         }
         
-        let (data, response) = try await URLSession.shared.data(from: url) as (Data, URLResponse)
-        
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            throw APIError.invalidResponse
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url) as (Data, URLResponse)
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw NetworkError.invalidResponse
+            }
+            
+            let statusCode = httpResponse.statusCode
+            guard 200..<300 ~= statusCode else {
+                throw NetworkError.badStatusCode(statusCode)
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                let dtos = try decoder.decode([CoinDTO].self, from: data)
+                return dtos.map { $0.toDomain() }
+            } catch {
+                throw NetworkError.decodingFailed
+            }
+            
+        } catch let error as NetworkError {
+            throw error
+            
+        } catch {
+            throw NetworkError.unknown(error)
         }
-        
-        let decoder = JSONDecoder()
-        
-        let coinDTOs = try decoder.decode([CoinDTO].self, from: data)
-        
-        return coinDTOs.map { $0.toDomain() }
         
     }
 }

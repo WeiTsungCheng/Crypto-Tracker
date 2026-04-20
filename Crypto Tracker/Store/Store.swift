@@ -37,7 +37,7 @@ final class Store: ObservableObject {
     
     private func fetchCoins() async {
         do {
-            let fetchedCoins = try await APIService.fetchCoins()
+            let fetchedCoins = try await APIService().fetchCoins()
             send(.fetchSuccess(Array(fetchedCoins.prefix(20))))
         } catch {
             send(.fetchFailed(error.localizedDescription))
