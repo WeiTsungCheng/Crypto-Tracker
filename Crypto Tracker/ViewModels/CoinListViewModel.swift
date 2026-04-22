@@ -12,10 +12,10 @@ import Combine
 @MainActor
 final class CoinListViewModel: ObservableObject {
     
-    @Published var coins: [Coin] = []
-    @Published var isLoading = false
-    @Published var errorMessage: String?
-    @Published var favoriteCoinIDs: Set<String> = []
+    @Published private(set) var coins: [Coin] = []
+    @Published private(set) var isLoading = false
+    @Published private(set) var errorMessage: String?
+    @Published private(set) var favoriteCoinIDs: Set<String> = []
     
     private let api: APIServiceProtocol
     
@@ -48,7 +48,7 @@ final class CoinListViewModel: ObservableObject {
         PersistenceService.saveFavorites(favoriteCoinIDs)
     }
     
-    func loadFavoriteCoins() {
+    func loadFavorites() {
         favoriteCoinIDs = PersistenceService.loadFavorites()
     }
     

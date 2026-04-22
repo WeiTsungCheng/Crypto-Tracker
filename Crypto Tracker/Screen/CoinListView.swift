@@ -58,7 +58,7 @@ struct CoinListView: View {
             }
             .navigationTitle("Crypto")
             .task {
-                vm.loadFavoriteCoins()
+                vm.loadFavorites()
                 await vm.loadCoins()
             }
             
