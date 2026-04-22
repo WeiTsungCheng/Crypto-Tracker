@@ -154,5 +154,6 @@ struct EmptyStateView: View {
 }
 
 #Preview {
-    CoinListView(api: APIService())
+//    CoinListView(api: APIService())
+    CoinListView(api: MockAPIService())
 }
