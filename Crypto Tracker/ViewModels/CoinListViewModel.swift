@@ -26,13 +26,13 @@ final class CoinListViewModel: ObservableObject {
     func loadCoins() async {
         isLoading = true
         errorMessage = nil
+        defer { isLoading = false }
         
         do {
             coins = try await api.fetchCoins()
         } catch {
             errorMessage = error.localizedDescription
         }
-        isLoading = false
     }
     
     func isFavorite(id: String) -> Bool {
