@@ -6,16 +6,15 @@
 //
 
 import Foundation
-import Combine
 
-
+@Observable
 @MainActor
-final class CoinListViewModel: ObservableObject {
+final class CoinListViewModel {
     
-    @Published private(set) var coins: [Coin] = []
-    @Published private(set) var isLoading = false
-    @Published private(set) var errorMessage: String?
-    @Published private(set) var favoriteCoinIDs: Set<String> = []
+    private(set) var coins: [Coin] = []
+    private(set) var isLoading = false
+    private(set) var errorMessage: String?
+    private(set) var favoriteCoinIDs: Set<String> = []
     
     private let api: APIServiceProtocol
     

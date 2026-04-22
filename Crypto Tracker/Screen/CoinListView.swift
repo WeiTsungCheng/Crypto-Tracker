@@ -8,10 +8,10 @@ import SwiftUI
 
 struct CoinListView: View {
     
-    @StateObject var vm: CoinListViewModel
+    @State var vm: CoinListViewModel
     
     init(api: APIServiceProtocol) {
-        _vm = StateObject(wrappedValue: CoinListViewModel(api: api))
+        _vm = State(wrappedValue: CoinListViewModel(api: api))
     }
     
     var body: some View {
