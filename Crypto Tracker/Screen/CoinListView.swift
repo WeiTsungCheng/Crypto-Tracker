@@ -8,7 +8,11 @@ import SwiftUI
 
 struct CoinListView: View {
     
-    @StateObject private var vm = CoinListViewModel(api: APIService())
+    @StateObject var vm: CoinListViewModel
+    
+    init(api: APIServiceProtocol) {
+        _vm = StateObject(wrappedValue: CoinListViewModel(api: api))
+    }
     
     var body: some View {
         NavigationStack {
@@ -131,8 +135,6 @@ struct EmptyStateView: View {
         self.action = retryAction
     }
     
-    
-    
     var body: some View {
         VStack(spacing: 12) {
             Text(title)
@@ -149,10 +151,8 @@ struct EmptyStateView: View {
         .padding()
     }
     
-    
-    
 }
 
 #Preview {
-    CoinListView()
+    CoinListView(api: APIService())
 }
