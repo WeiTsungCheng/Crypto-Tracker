@@ -16,6 +16,38 @@ final class CoinListViewModel {
     private(set) var errorMessage: String?
     private(set) var favoriteCoinIDs: Set<String> = []
     
+    var searchText = ""
+    var sortOption: SortOption = .marketCap
+    
+    var displayCoins: [Coin] {
+        let filtered = coins.filter { coin in
+            searchText.isEmpty || coin.name.localizedCaseInsensitiveContains(searchText) || coin.symbol.localizedCaseInsensitiveContains(searchText)
+        }
+        
+        switch sortOption {
+        case .marketCap:
+            return filtered.sorted { $0.marketCapRank ?? Int.max < $1.marketCapRank ?? Int.max }
+        case .priceHighToLow:
+            return filtered.sorted { $0.currentPrice > $1.currentPrice }
+        case .priceLowToHigh:
+            return filtered.sorted { $0.currentPrice < $1.currentPrice }
+        case .name:
+            return filtered.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        }
+    }
+    
+    enum SortOption: String, CaseIterable, Identifiable {
+        
+        case marketCap = "Market Cap"
+        case priceHighToLow = "Price ↓"
+        case priceLowToHigh = "Price ↑"
+        case name = "Name"
+        
+        var id: String {
+            return rawValue
+        }
+    }
+    
     private let api: APIServiceProtocol
     
     init(api: APIServiceProtocol) {

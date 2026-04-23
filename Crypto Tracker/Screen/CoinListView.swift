@@ -27,32 +27,33 @@ struct CoinListView: View {
                         }
                     }
                     
-                } else if vm.coins.isEmpty {
-                    
-                    EmptyStateView {
-                        Task {
-                            await vm.loadCoins()
-                        }
-                    }
-                    
                 } else {
-                    
-                    List(vm.coins) { coin in
+            
+                    VStack {
+                        SearchSortBarView(vm: vm)
                         
-                        NavigationLink(destination: CoinDetailView(coin: coin)) {
-                            CoinRowView(
-                                coin: coin,
-                                isFavorite: vm.isFavorite(id: coin.id), onFavoriteTapped: {
-                                    vm.toggleFavorite(id: coin.id)
+                        if vm.coins.isEmpty {
+                            EmptyStateView {
+                                Task { await vm.loadCoins()}
+                            }
+                        } else {
+                            List(vm.displayCoins) { coin in
+                                NavigationLink(destination: CoinDetailView(coin: coin)) {
+                                    CoinRowView(
+                                        coin: coin,
+                                        isFavorite: vm.isFavorite(id: coin.id), onFavoriteTapped: {
+                                            vm.toggleFavorite(id: coin.id)
+                                        }
+                                    )
                                 }
-                            )
+                            }
+                            .listStyle(.plain)
+                            .refreshable {
+                                await vm.loadCoins()
+                            }
                         }
-                        
                     }
-                    .listStyle(.plain)
-                    .refreshable {
-                        await vm.loadCoins()
-                    }
+                   
                 }
                 
             }
@@ -137,6 +138,7 @@ struct EmptyStateView: View {
     
     var body: some View {
         VStack(spacing: 12) {
+        
             Text(title)
                 .font(.headline)
             Text("Please try again later.")
