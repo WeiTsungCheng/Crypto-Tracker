@@ -159,6 +159,11 @@ The transition from a TCA-style architecture to MVVM was motivated by:
 
 ---
 
+## 📸 Screenshots
+![image](https://github.com/WeiTsungCheng/Crypto-Tracker/blob/main/App%20Image/CoinListView.png)
+![image](https://github.com/WeiTsungCheng/Crypto-Tracker/blob/main/App%20Image/CoinDetailView.png)
+
+---
 ## 🔗 API
 
 - CoinGecko Public API  
