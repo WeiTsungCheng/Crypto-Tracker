@@ -17,7 +17,6 @@ final class CoinRepository: CoinRepositoryProtocol {
     }
     
     func fetchCoins() async throws -> [Coin] {
-        return try await apiService.fetchCoins()
+        return try await apiService.fetchCoins().map { $0.toDomain() }
     }
-    
 }

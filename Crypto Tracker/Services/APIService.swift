@@ -33,12 +33,12 @@ enum NetworkError: LocalizedError {
 }
 
 protocol APIServiceProtocol {
-    func fetchCoins() async throws -> [Coin]
+    func fetchCoins() async throws -> [CoinDTO]
 }
 
 class APIService: APIServiceProtocol {
     
-    func fetchCoins() async throws -> [Coin] {
+    func fetchCoins() async throws -> [CoinDTO] {
         
         let coinURL = URL(string: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=gbp")
         guard let url = coinURL else {
@@ -58,8 +58,7 @@ class APIService: APIServiceProtocol {
             
             do {
                 let decoder = JSONDecoder()
-                let dtos = try decoder.decode([CoinDTO].self, from: data)
-                return dtos.map { $0.toDomain() }
+                return try decoder.decode([CoinDTO].self, from: data)
             } catch {
                 throw NetworkError.decodingFailed
             }
