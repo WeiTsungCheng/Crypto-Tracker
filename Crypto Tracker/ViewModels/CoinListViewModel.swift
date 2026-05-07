@@ -48,10 +48,10 @@ final class CoinListViewModel {
         }
     }
     
-    private let api: APIServiceProtocol
+    let respository: CoinRepositoryProtocol
     
-    init(api: APIServiceProtocol) {
-        self.api = api
+    init (repository: CoinRepositoryProtocol) {
+        self.respository = repository
     }
     
     func loadCoins() async {
@@ -60,7 +60,7 @@ final class CoinListViewModel {
         defer { isLoading = false }
         
         do {
-            coins = try await api.fetchCoins()
+            coins = try await respository.fetchCoins()
         } catch {
             errorMessage = error.localizedDescription
         }

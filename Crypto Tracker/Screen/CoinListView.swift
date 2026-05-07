@@ -10,8 +10,8 @@ struct CoinListView: View {
     
     @State var vm: CoinListViewModel
     
-    init(api: APIServiceProtocol) {
-        _vm = State(wrappedValue: CoinListViewModel(api: api))
+    init(repository: CoinRepositoryProtocol) {
+        _vm = State(wrappedValue: CoinListViewModel(repository: repository))
     }
     
     var body: some View {
@@ -157,5 +157,5 @@ struct EmptyStateView: View {
 
 #Preview {
 //    CoinListView(api: APIService())
-    CoinListView(api: MockAPIService())
+    CoinListView(repository: CoinRepository(apiService: APIService()))
 }

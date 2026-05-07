@@ -34,5 +34,6 @@ struct SearchSortBarView: View {
 }
 
 #Preview {
-    SearchSortBarView(vm: CoinListViewModel(api: APIService()))
+    let repository = CoinRepository(apiService: APIService())
+    SearchSortBarView(vm: CoinListViewModel(repository: repository))
 }

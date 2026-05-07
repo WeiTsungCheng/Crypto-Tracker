@@ -11,7 +11,7 @@ import SwiftUI
 struct Crypto_TrackerApp: App {
     var body: some Scene {
         WindowGroup {
-            CoinListView(api: APIService())
+            CoinListView(repository: CoinRepository(apiService: APIService()))
         }
     }
 }
