@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Foundation
 
 @main
 struct Crypto_TrackerApp: App {
     var body: some Scene {
         WindowGroup {
-            CoinListView(repository: CoinRepository(apiService: APIService()))
+            CoinListView(repository: CoinRepository(apiService: APIService(), cacheStore: CoinCacheStore(fileManager: FileManager.default)))
         }
     }
 }

@@ -34,10 +34,10 @@ final class CoinCacheStore: CoinCacheStoreProtocol {
             let data = try Data(contentsOf: cachedURL)
             let coins = try JSONDecoder().decode([CoinDTO].self, from: data)
             return coins
+            
         } catch {
-            print("get cached coins error")
+            print("get cached coins error \(error)")
         }
-         
         return []
     }
     

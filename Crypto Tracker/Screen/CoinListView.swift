@@ -156,6 +156,5 @@ struct EmptyStateView: View {
 }
 
 #Preview {
-//    CoinListView(api: APIService())
-    CoinListView(repository: CoinRepository(apiService: APIService()))
+    CoinListView(repository: CoinRepository(apiService: APIService(), cacheStore: CoinCacheStore(fileManager: FileManager.default)))
 }
