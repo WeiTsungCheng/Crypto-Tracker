@@ -64,7 +64,7 @@ The project was later refactored into **MVVM architecture** to simplify the data
   - Handles persistence (UserDefaults)
 
 #### Data Flow
-View → ViewModel → Service → ViewModel → View
+View → ViewModel → Repository → APIService / FileManager Cache
 
 ---
 
