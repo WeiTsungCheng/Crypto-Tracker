@@ -9,7 +9,7 @@ import Foundation
 
 protocol CoinCacheStoreProtocol {
     func saveCoins(_ coins: [CoinDTO]) throws -> Void
-    func getCoins() throws -> [CoinDTO]
+    func loadCoins() throws -> [CoinDTO]
 }
 
 final class CoinCacheStore: CoinCacheStoreProtocol {
@@ -22,12 +22,27 @@ final class CoinCacheStore: CoinCacheStoreProtocol {
     
     func saveCoins(_ coins: [CoinDTO]) throws -> Void {
         let data = try JSONEncoder().encode(coins)
-        
+        do {
+            try data.write(to: cachedURL)
+        } catch {
+            print("cached coins save error")
+        }
     }
     
-    func getCoins() throws -> [CoinDTO] {
+    func loadCoins() throws -> [CoinDTO] {
+        do {
+            let data = try Data(contentsOf: cachedURL)
+            let coins = try JSONDecoder().decode([CoinDTO].self, from: data)
+            return coins
+        } catch {
+            print("get cached coins error")
+        }
+         
         return []
     }
     
+    private var cachedURL: URL {
+        return fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent(fileName)
+    }
     
 }
